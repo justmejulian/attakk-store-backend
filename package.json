@@ -15,7 +15,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "keywords": ["express", "api", "sqlite"],
+  "keywords": [
+    "express",
+    "api",
+    "sqlite"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
