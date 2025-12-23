@@ -1,6 +1,6 @@
 import type { CreateOrderInput } from '../schemas/order.schema.ts';
 import { generateReferenceNumber } from '../utils/reference.ts';
-import { insertOrder, getAllOrders, countOrders, getProductStats, type Order } from '../db/queries.ts';
+import { insertOrder, getAllOrders, countOrders, getProductStats as getProductStatsDb } from '../db/queries.ts';
 
 export const createOrder = async (input: CreateOrderInput) => {
   const referenceNumber = generateReferenceNumber();
@@ -30,8 +30,8 @@ export const listOrders = async (limit: number, offset: number) => {
 };
 
 export const getProductStats = async () => {
-  const products = await getProductStats();
-  const totalItems = products.reduce((sum, p) => sum + p.total_quantity, 0);
+  const products = await getProductStatsDb();
+  const totalItems = products.reduce((sum: number, p: { total_quantity: number }) => sum + p.total_quantity, 0);
 
   return {
     products,

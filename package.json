@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "short-uid": "^0.1.0",
+    "short-uuid": "^6.0.3",
     "sqlite3": "^5.1.7",
     "tsx": "^4.19.4",
     "typescript": "^5.8.2",

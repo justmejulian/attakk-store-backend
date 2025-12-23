@@ -1,4 +1,3 @@
-import Database from 'sqlite3';
 import { getDb } from './index.ts';
 
 export type LineItem = {
@@ -13,6 +12,19 @@ export type Order = {
   phone: string | null;
   line_items: LineItem[];
   created_at: string;
+};
+
+type OrderRow = {
+  id: number;
+  reference_number: string;
+  email: string;
+  phone: string | null;
+  line_items: string;
+  created_at: string;
+};
+
+type CountRow = {
+  count: number;
 };
 
 export const insertOrder = (
@@ -43,11 +55,11 @@ export const getAllOrders = (limit: number, offset: number): Promise<Order[]> =>
     db.all(
       'SELECT * FROM orders ORDER BY created_at DESC LIMIT ? OFFSET ?',
       [limit, offset],
-      (err, rows) => {
+      (err, rows: OrderRow[]) => {
         if (err) {
           reject(err);
         } else {
-          const orders = (rows as any[]).map((row) => ({
+          const orders = rows.map((row) => ({
             ...row,
             line_items: JSON.parse(row.line_items),
           }));
@@ -61,7 +73,7 @@ export const getAllOrders = (limit: number, offset: number): Promise<Order[]> =>
 export const countOrders = (): Promise<number> => {
   return new Promise((resolve, reject) => {
     const db = getDb();
-    db.get('SELECT COUNT(*) as count FROM orders', (err, row: any) => {
+    db.get('SELECT COUNT(*) as count FROM orders', (err, row: CountRow) => {
       if (err) {
         reject(err);
       } else {
@@ -74,7 +86,7 @@ export const countOrders = (): Promise<number> => {
 export const getProductStats = (): Promise<{ price_id: string; total_quantity: number }[]> => {
   return new Promise((resolve, reject) => {
     const db = getDb();
-    db.all('SELECT * FROM orders', (err, rows: any[]) => {
+    db.all('SELECT * FROM orders', (err, rows: OrderRow[]) => {
       if (err) {
         reject(err);
         return;

@@ -1,7 +1,5 @@
-import ShortUID from 'short-uid';
-
-const uid = new ShortUID();
+import { generate } from 'short-uuid'
 
 export const generateReferenceNumber = (): string => {
-  return `ORD-${uid.randomUUID(6)}`;
-};
+  return `ORD-${generate()}`
+}

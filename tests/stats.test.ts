@@ -2,12 +2,13 @@ import { describe, it, mock } from 'node:test';
 import assert from 'node:assert';
 import { createInMemoryDatabase } from './helpers.ts';
 import { getProductStats } from '../src/db/queries.ts';
+import * as dbModule from '../src/db/index.ts';
 
 describe('Stats Service', () => {
   it('should aggregate product quantities', async () => {
     const mockDb = createInMemoryDatabase();
 
-    const mockGetDb = mock.method(() => mockDb);
+    mock.method(dbModule, 'getDb', () => mockDb);
 
     const insertOrder = async (
       referenceNumber: string,
@@ -36,6 +37,6 @@ describe('Stats Service', () => {
     assert.strictEqual(stats.find((s) => s.price_id === 'price_a')?.total_quantity, 3);
     assert.strictEqual(stats.find((s) => s.price_id === 'price_b')?.total_quantity, 3);
 
-    mockGetDb.mock.restore();
+    mock.restoreAll();
   });
 });

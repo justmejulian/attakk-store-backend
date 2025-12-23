@@ -16,13 +16,16 @@ export const errorHandler = (
 
   if (isAppError(err)) {
     const statusCode = getStatusCode(err.code);
+    const errorResponse: Record<string, unknown> = {
+      code: err.code,
+      message: err.message,
+    };
+    if (err.details) {
+      errorResponse.details = err.details;
+    }
     res.status(statusCode).json({
       success: false,
-      error: {
-        code: err.code,
-        message: err.message,
-        ...(err.details && { details: err.details }),
-      },
+      error: errorResponse,
     });
     return;
   }

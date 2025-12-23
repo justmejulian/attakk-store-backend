@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { createOrderSchema, listOrdersSchema, type CreateOrderInput } from '../schemas/order.schema.ts';
+import { createOrderSchema, listOrdersSchema } from '../schemas/order.schema.ts';
 import { createOrder, listOrders } from '../services/order.service.ts';
 import { createError } from '../middleware/error-handler.ts';
 
