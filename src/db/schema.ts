@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS orders (
   line_items TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
-`;
+`

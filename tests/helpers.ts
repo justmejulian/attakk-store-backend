@@ -1,7 +1,7 @@
-import Database from 'sqlite3';
+import Database from 'sqlite3'
 
 export const createInMemoryDatabase = (): Database.Database => {
-  const db = new Database.Database(':memory:');
+  const db = new Database.Database(':memory:')
 
   db.exec(`
     CREATE TABLE orders (
@@ -12,7 +12,7 @@ export const createInMemoryDatabase = (): Database.Database => {
       line_items TEXT NOT NULL,
       created_at TEXT NOT NULL
     )
-  `);
+  `)
 
-  return db;
-};
+  return db
+}

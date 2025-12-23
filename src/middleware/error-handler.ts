@@ -1,9 +1,9 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express'
 
 export interface AppError {
-  code: string;
-  message: string;
-  details?: unknown;
+  code: string
+  message: string
+  details?: unknown
 }
 
 export const errorHandler = (
@@ -12,22 +12,22 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ): void => {
-  console.error('Error:', err);
+  console.error('Error:', err)
 
   if (isAppError(err)) {
-    const statusCode = getStatusCode(err.code);
+    const statusCode = getStatusCode(err.code)
     const errorResponse: Record<string, unknown> = {
       code: err.code,
       message: err.message,
-    };
+    }
     if (err.details) {
-      errorResponse.details = err.details;
+      errorResponse.details = err.details
     }
     res.status(statusCode).json({
       success: false,
       error: errorResponse,
-    });
-    return;
+    })
+    return
   }
 
   res.status(500).json({
@@ -36,23 +36,23 @@ export const errorHandler = (
       code: 'INTERNAL_ERROR',
       message: 'An unexpected error occurred',
     },
-  });
-};
+  })
+}
 
 const isAppError = (err: unknown): err is AppError => {
-  return typeof err === 'object' && err !== null && 'code' in err && 'message' in err;
-};
+  return typeof err === 'object' && err !== null && 'code' in err && 'message' in err
+}
 
 const getStatusCode = (code: string): number => {
   const statusMap: Record<string, number> = {
     VALIDATION_ERROR: 400,
     NOT_FOUND: 404,
-  };
-  return statusMap[code] || 500;
-};
+  }
+  return statusMap[code] || 500
+}
 
 export const createError = (code: string, message: string, details?: unknown): AppError => ({
   code,
   message,
   details,
-});
+})

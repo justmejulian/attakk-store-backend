@@ -9,11 +9,13 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "node --test tests/**/*.test.ts",
+    "code": "npm run typecheck && npm run lint && npm run format",
+    "code:fix": "npm run typecheck && npm run lint:fix && npm run format:fix",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "keywords": [
     "express",
