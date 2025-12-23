@@ -1,7 +1,7 @@
-import { type Request, type Response } from 'express';
+import { type Request, type Response, type NextFunction } from 'express';
 import { getDb } from '../db/index.ts';
 
-export const healthHandler = (_req: Request, res: Response) => {
+export const healthHandler = (_req: Request, res: Response, next: NextFunction) => {
   const db = getDb();
   db.get('SELECT 1', (err) => {
     if (err) {
