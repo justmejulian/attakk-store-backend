@@ -1,16 +1,16 @@
-import Database from 'sqlite3'
-import { config } from '../config.ts'
+import Database from 'sqlite3';
+import { config } from '../config.ts';
 
 export const createDatabase = (path: string = config.DATABASE_PATH): Database.Database => {
-  return new Database.Database(path)
-}
+  return new Database.Database(path);
+};
 
 export const initializeDatabase = (db: Database.Database): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'", (err, row) => {
       if (err) {
-        reject(err)
-        return
+        reject(err);
+        return;
       }
 
       if (!row) {
@@ -25,15 +25,15 @@ export const initializeDatabase = (db: Database.Database): Promise<void> => {
             )`,
           (createErr) => {
             if (createErr) {
-              reject(createErr)
+              reject(createErr);
             } else {
-              resolve()
+              resolve();
             }
           }
-        )
+        );
       } else {
-        resolve()
+        resolve();
       }
-    })
-  })
-}
+    });
+  });
+};

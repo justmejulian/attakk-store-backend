@@ -1,9 +1,9 @@
-import type { Request, Response } from 'express'
-import type Database from 'sqlite3'
+import type { Request, Response } from 'express';
+import type Database from 'sqlite3';
 
 export type HealthHandlers = {
-  healthHandler: (_req: Request, res: Response) => void
-}
+  healthHandler: (_req: Request, res: Response) => void;
+};
 
 export const createHealthHandler = (db: Database.Database): HealthHandlers => {
   const healthHandler = (_req: Request, res: Response): void => {
@@ -14,16 +14,16 @@ export const createHealthHandler = (db: Database.Database): HealthHandlers => {
           timestamp: new Date().toISOString(),
           database: 'disconnected',
           error: err.message,
-        })
+        });
       } else {
         res.json({
           status: 'healthy',
           timestamp: new Date().toISOString(),
           database: 'connected',
-        })
+        });
       }
-    })
-  }
+    });
+  };
 
-  return { healthHandler }
-}
+  return { healthHandler };
+};
