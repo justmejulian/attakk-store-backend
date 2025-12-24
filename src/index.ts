@@ -1,7 +1,10 @@
-import { initializeDatabase } from './db/index.ts'
-import { app, config } from './app.ts'
+import { createDatabase, initializeDatabase } from './db/index.ts'
+import { createApp, config } from './app.ts'
 
-await initializeDatabase()
+const db = createDatabase()
+await initializeDatabase(db)
+
+const app = createApp(db)
 
 app.listen(config.PORT, () => {
   console.log(`Server running on port ${config.PORT}`)

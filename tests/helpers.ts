@@ -1,4 +1,6 @@
 import Database from 'sqlite3'
+import { createOrderRepository } from '../src/db/queries.ts'
+import { createOrderService } from '../src/services/order.service.ts'
 
 export const createInMemoryDatabase = (): Database.Database => {
   const db = new Database.Database(':memory:')
@@ -15,4 +17,12 @@ export const createInMemoryDatabase = (): Database.Database => {
   `)
 
   return db
+}
+
+export const createTestOrderService = () => {
+  const db = createInMemoryDatabase()
+  const repo = createOrderRepository(db)
+  const service = createOrderService(repo)
+
+  return { db, repo, service }
 }

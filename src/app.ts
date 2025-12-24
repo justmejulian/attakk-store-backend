@@ -1,14 +1,25 @@
-import express from 'express'
+import express, { type Express } from 'express'
+import type Database from 'sqlite3'
 import { config } from './config.ts'
-import routes from './routes/index.ts'
+import { createRoutes } from './routes/index.ts'
+import { createOrderRepository } from './db/queries.ts'
+import { createOrderService } from './services/order.service.ts'
 import { errorHandler } from './middleware/error-handler.ts'
 
-const app = express()
+export const createApp = (db: Database.Database): Express => {
+  const app = express()
 
-app.use(express.json())
+  const repo = createOrderRepository(db)
+  const service = createOrderService(repo)
+  const routes = createRoutes(db, service)
 
-app.use('/', routes)
+  app.use(express.json())
 
-app.use(errorHandler)
+  app.use('/', routes)
 
-export { app, config }
+  app.use(errorHandler)
+
+  return app
+}
+
+export { config }

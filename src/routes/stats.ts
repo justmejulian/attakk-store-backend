@@ -1,15 +1,27 @@
 import type { Request, Response, NextFunction } from 'express'
-import { getProductStats } from '../services/order.service.ts'
+import type { OrderService } from '../services/order.service.ts'
 
-export const getProductStatsHandler = async (_req: Request, res: Response, next: NextFunction) => {
-  try {
-    const data = await getProductStats()
+export type StatsHandlers = {
+  getProductStatsHandler: (_req: Request, res: Response, next: NextFunction) => Promise<void>
+}
 
-    res.json({
-      success: true,
-      data,
-    })
-  } catch (err) {
-    next(err)
+export const createStatsHandlers = (service: OrderService): StatsHandlers => {
+  const getProductStatsHandler = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const data = await service.getProductStats()
+
+      res.json({
+        success: true,
+        data,
+      })
+    } catch (err) {
+      next(err)
+    }
   }
+
+  return { getProductStatsHandler }
 }

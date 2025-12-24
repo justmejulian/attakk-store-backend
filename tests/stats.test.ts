@@ -1,54 +1,59 @@
-import { describe, it, mock } from 'node:test'
+import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { createInMemoryDatabase } from './helpers.ts'
-import { getProductStats } from '../src/db/queries.ts'
-import * as dbModule from '../src/db/index.ts'
+import { createTestOrderService } from './helpers.ts'
 
-describe('Stats Service', () => {
+describe('Stats Repository', () => {
   it('should aggregate product quantities', async () => {
-    const mockDb = createInMemoryDatabase()
+    const { repo } = createTestOrderService()
 
-    mock.method(dbModule, 'getDb', () => mockDb)
-
-    const insertOrder = async (
-      referenceNumber: string,
-      email: string,
-      lineItemsJson: string
-    ): Promise<number> => {
-      return new Promise((resolve, reject) => {
-        mockDb.run(
-          'INSERT INTO orders (reference_number, email, phone, line_items, created_at) VALUES (?, ?, ?, ?, ?)',
-          [referenceNumber, email, null, lineItemsJson, new Date().toISOString()],
-          function (err) {
-            if (err) reject(err)
-            else resolve(this.lastID as number)
-          }
-        )
-      })
-    }
-
-    await insertOrder(
+    await repo.insertOrder(
       'ORD-1',
       'test1@example.com',
+      undefined,
       JSON.stringify([{ price_id: 'price_a', quantity: 2 }])
     )
-    await insertOrder(
+    await repo.insertOrder(
       'ORD-2',
       'test2@example.com',
+      undefined,
       JSON.stringify([{ price_id: 'price_a', quantity: 1 }])
     )
-    await insertOrder(
+    await repo.insertOrder(
       'ORD-3',
       'test3@example.com',
+      undefined,
       JSON.stringify([{ price_id: 'price_b', quantity: 3 }])
     )
 
-    const stats = await getProductStats()
+    const stats = await repo.getProductStats()
 
     assert.strictEqual(stats.length, 2)
     assert.strictEqual(stats.find((s) => s.price_id === 'price_a')?.total_quantity, 3)
     assert.strictEqual(stats.find((s) => s.price_id === 'price_b')?.total_quantity, 3)
+  })
+})
 
-    mock.restoreAll()
+describe('Stats Service', () => {
+  it('should get product stats via service', async () => {
+    const { service } = createTestOrderService()
+
+    await service.createOrder({
+      email: 'test1@example.com',
+      line_items: [{ price_id: 'price_a', quantity: 2 }],
+    })
+    await service.createOrder({
+      email: 'test2@example.com',
+      line_items: [{ price_id: 'price_a', quantity: 1 }],
+    })
+    await service.createOrder({
+      email: 'test3@example.com',
+      line_items: [{ price_id: 'price_b', quantity: 3 }],
+    })
+
+    const result = await service.getProductStats()
+
+    assert.strictEqual(result.products.length, 2)
+    assert.strictEqual(result.summary.total_orders, 3)
+    assert.strictEqual(result.summary.total_items, 6)
   })
 })

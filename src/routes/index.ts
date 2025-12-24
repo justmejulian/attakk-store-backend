@@ -1,13 +1,21 @@
 import { Router } from 'express'
-import { createOrderHandler, listOrdersHandler } from './orders.ts'
-import { getProductStatsHandler } from './stats.ts'
-import { healthHandler } from './health.ts'
+import type Database from 'sqlite3'
+import type { OrderService } from '../services/order.service.ts'
+import { createOrderHandlers } from './orders.ts'
+import { createStatsHandlers } from './stats.ts'
+import { createHealthHandler } from './health.ts'
 
-const router = Router()
+export const createRoutes = (db: Database.Database, service: OrderService): Router => {
+  const router = Router()
 
-router.get('/health', healthHandler)
-router.post('/orders', createOrderHandler)
-router.get('/orders', listOrdersHandler)
-router.get('/stats/products', getProductStatsHandler)
+  const { healthHandler } = createHealthHandler(db)
+  const { createOrderHandler, listOrdersHandler } = createOrderHandlers(service)
+  const { getProductStatsHandler } = createStatsHandlers(service)
 
-export default router
+  router.get('/health', healthHandler)
+  router.post('/orders', createOrderHandler)
+  router.get('/orders', listOrdersHandler)
+  router.get('/stats/products', getProductStatsHandler)
+
+  return router
+}
