@@ -1,28 +1,27 @@
 import type { Request, Response } from 'express';
-import type Database from 'sqlite3';
+import type { DatabaseSync } from 'node:sqlite';
 
 export type HealthHandlers = {
   healthHandler: (_req: Request, res: Response) => void;
 };
 
-export const createHealthHandler = (db: Database.Database): HealthHandlers => {
+export const createHealthHandler = (db: DatabaseSync): HealthHandlers => {
   const healthHandler = (_req: Request, res: Response): void => {
-    db.get('SELECT 1', (err: Error | null) => {
-      if (err) {
-        res.status(500).json({
-          status: 'unhealthy',
-          timestamp: new Date().toISOString(),
-          database: 'disconnected',
-          error: err.message,
-        });
-      } else {
-        res.json({
-          status: 'healthy',
-          timestamp: new Date().toISOString(),
-          database: 'connected',
-        });
-      }
-    });
+    try {
+      db.prepare('SELECT 1').get();
+      res.json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        database: 'connected',
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        database: 'disconnected',
+        error: err instanceof Error ? err.message : 'Unknown error',
+      });
+    }
   };
 
   return { healthHandler };

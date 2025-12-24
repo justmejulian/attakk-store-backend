@@ -1,12 +1,12 @@
 import express, { type Express } from 'express';
-import type Database from 'sqlite3';
 import { config } from './config.ts';
 import { createRoutes } from './routes/index.ts';
 import { createOrderRepository } from './db/queries.ts';
 import { createOrderService } from './services/order.ts';
 import { errorHandler } from './middleware/error-handler.ts';
+import type { DatabaseSync } from 'node:sqlite';
 
-export const createApp = (db: Database.Database): Express => {
+export const createApp = (db: DatabaseSync): Express => {
   const app = express();
 
   const repo = createOrderRepository(db);

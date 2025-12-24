@@ -3,29 +3,29 @@ import assert from 'node:assert';
 import { createTestOrderService } from './helpers.ts';
 
 describe('Stats Repository', () => {
-  it('should aggregate product quantities', async () => {
+  it('should aggregate product quantities', () => {
     const { repo } = createTestOrderService();
 
-    await repo.insertOrder(
+    repo.insertOrder(
       'ORD-1',
       'test1@example.com',
       undefined,
       JSON.stringify([{ price_id: 'price_a', quantity: 2 }])
     );
-    await repo.insertOrder(
+    repo.insertOrder(
       'ORD-2',
       'test2@example.com',
       undefined,
       JSON.stringify([{ price_id: 'price_a', quantity: 1 }])
     );
-    await repo.insertOrder(
+    repo.insertOrder(
       'ORD-3',
       'test3@example.com',
       undefined,
       JSON.stringify([{ price_id: 'price_b', quantity: 3 }])
     );
 
-    const stats = await repo.getProductStats();
+    const stats = repo.getProductStats();
 
     assert.strictEqual(stats.length, 2);
     assert.strictEqual(stats.find((s) => s.price_id === 'price_a')?.total_quantity, 3);
@@ -34,23 +34,23 @@ describe('Stats Repository', () => {
 });
 
 describe('Stats Service', () => {
-  it('should get product stats via service', async () => {
+  it('should get product stats via service', () => {
     const { service } = createTestOrderService();
 
-    await service.createOrder({
+    service.createOrder({
       email: 'test1@example.com',
       line_items: [{ price_id: 'price_a', quantity: 2 }],
     });
-    await service.createOrder({
+    service.createOrder({
       email: 'test2@example.com',
       line_items: [{ price_id: 'price_a', quantity: 1 }],
     });
-    await service.createOrder({
+    service.createOrder({
       email: 'test3@example.com',
       line_items: [{ price_id: 'price_b', quantity: 3 }],
     });
 
-    const result = await service.getProductStats();
+    const result = service.getProductStats();
 
     assert.strictEqual(result.products.length, 2);
     assert.strictEqual(result.summary.total_orders, 3);

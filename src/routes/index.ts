@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import type Database from 'sqlite3';
+import type { DatabaseSync } from 'node:sqlite';
 import type { OrderService } from '../services/order.ts';
 import { createOrderHandlers } from './orders.ts';
 import { createStatsHandlers } from './stats.ts';
 import { createHealthHandler } from './health.ts';
 
-export const createRoutes = (db: Database.Database, service: OrderService): Router => {
+export const createRoutes = (db: DatabaseSync, service: OrderService): Router => {
   const router = Router();
 
   const { healthHandler } = createHealthHandler(db);

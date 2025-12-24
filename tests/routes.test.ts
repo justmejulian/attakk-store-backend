@@ -74,11 +74,11 @@ describe('Order Routes', () => {
     const { service } = createTestOrderService();
     const handlers = createOrderHandlers(service);
 
-    await service.createOrder({
+    service.createOrder({
       email: 'test1@example.com',
       line_items: [{ price_id: 'price_a', quantity: 1 }],
     });
-    await service.createOrder({
+    service.createOrder({
       email: 'test2@example.com',
       line_items: [{ price_id: 'price_b', quantity: 2 }],
     });
@@ -132,11 +132,11 @@ describe('Stats Routes', () => {
     const { service } = createTestOrderService();
     const handlers = createStatsHandlers(service);
 
-    await service.createOrder({
+    service.createOrder({
       email: 'test1@example.com',
       line_items: [{ price_id: 'price_a', quantity: 2 }],
     });
-    await service.createOrder({
+    service.createOrder({
       email: 'test2@example.com',
       line_items: [{ price_id: 'price_a', quantity: 1 }],
     });
@@ -162,7 +162,7 @@ describe('Stats Routes', () => {
 });
 
 describe('Health Routes', () => {
-  it('should return healthy status', async () => {
+  it('should return healthy status', () => {
     const { db } = createTestOrderService();
     const handlers = createHealthHandler(db);
 
@@ -175,6 +175,6 @@ describe('Health Routes', () => {
       },
     } as any;
 
-    await handlers.healthHandler(req, res);
+    handlers.healthHandler(req, res);
   });
 });

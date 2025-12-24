@@ -36,8 +36,8 @@ export type OrderRepository = {
     email: string,
     phone: string | undefined,
     lineItemsJson: string
-  ) => Promise<number>;
-  getAllOrders: (limit: number, offset: number) => Promise<Order[]>;
-  countOrders: () => Promise<number>;
-  getProductStats: () => Promise<ProductStat[]>;
+  ) => number;
+  getAllOrders: (limit: number, offset: number) => Order[];
+  countOrders: () => number;
+  getProductStats: () => ProductStat[];
 };

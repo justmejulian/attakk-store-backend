@@ -27,22 +27,17 @@ export type ProductStatsResponse = {
 };
 
 export type OrderService = {
-  createOrder: (input: CreateOrderInput) => Promise<CreatedOrderResponse>;
-  listOrders: (limit: number, offset: number) => Promise<ListOrdersResponse>;
-  getProductStats: () => Promise<ProductStatsResponse>;
+  createOrder: (input: CreateOrderInput) => CreatedOrderResponse;
+  listOrders: (limit: number, offset: number) => ListOrdersResponse;
+  getProductStats: () => ProductStatsResponse;
 };
 
 export const createOrderService = (repo: OrderRepository): OrderService => {
-  const createOrder = async (input: CreateOrderInput): Promise<CreatedOrderResponse> => {
+  const createOrder = (input: CreateOrderInput): CreatedOrderResponse => {
     const referenceNumber = generateReferenceNumber();
     const lineItemsJson = JSON.stringify(input.line_items);
 
-    const orderId = await repo.insertOrder(
-      referenceNumber,
-      input.email,
-      input.phone,
-      lineItemsJson
-    );
+    const orderId = repo.insertOrder(referenceNumber, input.email, input.phone, lineItemsJson);
 
     return {
       id: orderId,
@@ -52,11 +47,8 @@ export const createOrderService = (repo: OrderRepository): OrderService => {
     };
   };
 
-  const listOrders = async (limit: number, offset: number): Promise<ListOrdersResponse> => {
-    const [orders, total] = await Promise.all([
-      repo.getAllOrders(limit, offset),
-      repo.countOrders(),
-    ]);
+  const listOrders = (limit: number, offset: number): ListOrdersResponse => {
+    const [orders, total] = [repo.getAllOrders(limit, offset), repo.countOrders()];
 
     return {
       orders,
@@ -68,8 +60,8 @@ export const createOrderService = (repo: OrderRepository): OrderService => {
     };
   };
 
-  const getProductStats = async (): Promise<ProductStatsResponse> => {
-    const products = await repo.getProductStats();
+  const getProductStats = (): ProductStatsResponse => {
+    const products = repo.getProductStats();
     const totalItems = products.reduce(
       (sum: number, p: { total_quantity: number }) => sum + p.total_quantity,
       0
@@ -78,7 +70,7 @@ export const createOrderService = (repo: OrderRepository): OrderService => {
     return {
       products,
       summary: {
-        total_orders: await repo.countOrders(),
+        total_orders: repo.countOrders(),
         total_items: totalItems,
       },
     };
