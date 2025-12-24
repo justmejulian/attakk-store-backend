@@ -3,7 +3,7 @@ import type Database from 'sqlite3'
 import { config } from './config.ts'
 import { createRoutes } from './routes/index.ts'
 import { createOrderRepository } from './db/queries.ts'
-import { createOrderService } from './services/order.service.ts'
+import { createOrderService } from './services/order.ts'
 import { errorHandler } from './middleware/error-handler.ts'
 
 export const createApp = (db: Database.Database): Express => {

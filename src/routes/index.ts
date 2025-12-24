@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type Database from 'sqlite3'
-import type { OrderService } from '../services/order.service.ts'
+import type { OrderService } from '../services/order.ts'
 import { createOrderHandlers } from './orders.ts'
 import { createStatsHandlers } from './stats.ts'
 import { createHealthHandler } from './health.ts'

@@ -1,6 +1,6 @@
 import Database from 'sqlite3'
 import { createOrderRepository } from '../src/db/queries.ts'
-import { createOrderService } from '../src/services/order.service.ts'
+import { createOrderService } from '../src/services/order.ts'
 
 export const createInMemoryDatabase = (): Database.Database => {
   const db = new Database.Database(':memory:')

@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { OrderService } from '../services/order.service.ts'
+import type { OrderService } from '../services/order.ts'
 
 export type StatsHandlers = {
   getProductStatsHandler: (_req: Request, res: Response, next: NextFunction) => Promise<void>
