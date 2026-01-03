@@ -1,7 +1,7 @@
-import { DatabaseSync } from 'node:sqlite';
+import type Database from 'better-sqlite3';
 import type { OrderRepository, Order, OrderRow, CountRow, LineItem, ProductStat } from './types';
 
-export const createOrderRepository = (db: DatabaseSync): OrderRepository => {
+export const createOrderRepository = (db: Database.Database): OrderRepository => {
   const insertOrder = (
     referenceNumber: string,
     email: string,

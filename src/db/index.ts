@@ -1,11 +1,11 @@
-import { DatabaseSync } from 'node:sqlite';
+import Database from 'better-sqlite3';
 import { config } from '../config';
 
-export const createDatabase = (path: string = config.DATABASE_PATH): DatabaseSync => {
-  return new DatabaseSync(path);
+export const createDatabase = (path: string = config.DATABASE_PATH): Database.Database => {
+  return new Database(path);
 };
 
-export const initializeDatabase = (db: DatabaseSync): void => {
+export const initializeDatabase = (db: Database.Database): void => {
   const row = db
     .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='orders'")
     .get();

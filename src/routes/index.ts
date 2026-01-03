@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import type { DatabaseSync } from 'node:sqlite';
+import type Database from 'better-sqlite3';
 import type { OrderService } from '../services/order';
 import { createOrderHandlers } from './orders';
 import { createStatsHandlers } from './stats';
 import { createHealthHandler } from './health';
 
-export const createRoutes = (db: DatabaseSync, service: OrderService): Router => {
+export const createRoutes = (db: Database.Database, service: OrderService): Router => {
   const router = Router();
 
   const { healthHandler } = createHealthHandler(db);

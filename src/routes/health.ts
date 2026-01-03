@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express';
-import type { DatabaseSync } from 'node:sqlite';
+import type Database from 'better-sqlite3';
 
 export type HealthHandlers = {
   healthHandler: (_req: Request, res: Response) => void;
 };
 
-export const createHealthHandler = (db: DatabaseSync): HealthHandlers => {
+export const createHealthHandler = (db: Database.Database): HealthHandlers => {
   const healthHandler = (_req: Request, res: Response): void => {
     try {
       db.prepare('SELECT 1').get();

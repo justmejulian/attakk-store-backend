@@ -4,9 +4,9 @@ import { createRoutes } from './routes/index';
 import { createOrderRepository } from './db/queries';
 import { createOrderService } from './services/order';
 import { errorHandler } from './middleware/error-handler';
-import type { DatabaseSync } from 'node:sqlite';
+import type Database from 'better-sqlite3';
 
-export const createApp = (db: DatabaseSync): Express => {
+export const createApp = (db: Database.Database): Express => {
   const app = express();
 
   const repo = createOrderRepository(db);

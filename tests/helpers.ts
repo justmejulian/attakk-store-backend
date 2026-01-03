@@ -1,9 +1,9 @@
-import { DatabaseSync } from 'node:sqlite';
+import Database from 'better-sqlite3';
 import { createOrderRepository } from '../src/db/queries.ts';
 import { createOrderService } from '../src/services/order.ts';
 
-export const createInMemoryDatabase = (): DatabaseSync => {
-  const db = new DatabaseSync(':memory:');
+export const createInMemoryDatabase = (): Database.Database => {
+  const db = new Database(':memory:');
 
   db.exec(`
     CREATE TABLE orders (
