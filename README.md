@@ -1,72 +1,126 @@
 # Attakk Store Backend
 
-Lightweight REST API for temporary e-commerce campaign.
+## Introduction
 
-## Tech Stack
+Attakk Store Backend is a lightweight internal REST API for managing orders and statistics for a temporary e-commerce campaign. Built with Node.js, Express, and SQLite for simplicity and performance.
 
-- Node.js 22+
-- TypeScript (strict mode)
-- Express
-- SQLite (node:sqlite)
-- Zod (validation)
+The Idea is to use it until we have Stripe up and running.
 
 ## Installation
 
+To set up the project locally, follow these steps:
+
+1. Install dependencies:
+
+   ```bash
+   nvm install
+   npm install
+   ```
+
+1. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+- **Development**: Use `npm run dev` to start the development server with hot reload.
+- **Build**: Use `npm run build` to compile TypeScript.
+- **Production**: Use `npm start` to start the production server.
+- **Testing**: Use `npm run test` to run all tests.
+- **Type Checking**: Use `npm run typecheck` to run TypeScript type checking.
+- **Linting**: Use `npm run lint` to check code quality, or `npm run lint:fix` to auto-fix issues.
+- **Formatting**: Use `npm run format` to check formatting, or `npm run format:fix` to auto-format.
+
+## Docker
+
+To run the project using Docker:
+
+1. Build the Docker image:
+
+   ```bash
+   docker build -t attakk-store-backend .
+   ```
+
+2. Run the Docker container:
+   ```bash
+   docker run -p 3000:3000 attakk-store-backend
+   ```
+
+The API will be accessible at `http://localhost:3000`.
+
+## Deployment
+
+Deployed using Dokku on the same host as the frontend. The API is only accessible internally via Docker networking.
+
+### Initial Setup Dokku
+
+On Dokku Host:
+
 ```bash
-npm install
+dokku apps:create attakk-store-backend
+# No external ports or domains - internal access only via Docker network
+dokku docker-options:add attakk-store-backend deploy "--network dokku"
 ```
 
-## Development
+**Internal Access**: The frontend accesses this API via `http://attakk-store-backend.web:3000` on the Docker network.
+
+On Local Machine:
 
 ```bash
-npm run dev          # Start dev server with hot reload
-npm run test         # Run all tests
-npm run typecheck    # TypeScript type checking
-npm run lint         # ESLint check
-npm run lint:fix     # Auto-fix ESLint issues
-npm run format       # Prettier check
-npm run format:fix   # Auto-format code
+git remote add dokku dokku@atk-collective.ch:attakk-store-backend
 ```
 
-## Build
+### Deployment
+
+#### Automatic Deployment (GitHub Actions)
+
+Pushing to the `main` branch automatically deploys to Dokku via GitHub Actions.
+
+**Setup:**
+
+1. Generate SSH key on the Dokku server:
+
+   ```bash
+   ssh-keygen -t ed25519 -f dokku_github_actions
+   ```
+
+2. Add public key to authorized_keys:
+
+   ```bash
+   cat dokku_github_actions.pub >> ~/.ssh/authorized_keys
+   ```
+
+3. Add public key to Dokku:
+
+   ```bash
+   cat dokku_github_actions.pub | sudo dokku ssh-keys:add github_actions
+   dokku ssh-keys:list
+   ```
+
+4. Add private key to GitHub repository secrets as `SSH_PRIVATE_KEY`:
+   - Go to repository Settings → Secrets and variables → Actions
+   - Add new repository secret named `SSH_PRIVATE_KEY`
+   - Paste contents of `dokku_github_actions` (private key)
+
+#### Manual Deployment
 
 ```bash
-npm run build        # Compile TypeScript
-npm start            # Start production server
+git push dokku main
 ```
 
-## API Documentation
-
-See [api.md](api.md) for complete API reference including endpoints, request/response formats, and examples.
-
-## Database Schema
-
-See [schema.md](schema.md) for database structure, types, and query details.
-
-## Project Structure
+Make sure you have your ssh config set up correctly to allow access to the Dokku host. (Use IP address of server as Hostname in your SSH config.)
 
 ```
-src/
-  db/              # Database layer (schema, queries, types)
-  middleware/      # Express middleware
-  routes/          # API route handlers
-  schemas/         # Zod validation schemas
-  services/        # Business logic
-  types/           # TypeScript type definitions
-  utils/           # Utility functions
-  app.ts           # Express app configuration
-  config.ts        # Environment configuration
-  index.ts         # Application entry point
-tests/             # Node.js built-in test runner
+Host atk-collective.ch
+    HostName 83.228.205.168
+    User ubuntu
+    IdentityFile ~/.ssh/...
 ```
 
-## Code Style
+Test:
 
-- Import extensions: Always use `.ts`
-- Types: Strict mode, no `any` (use `unknown`), prefer `interface` for objects
-- Format: Single quotes, no semicolons, 2 spaces, 100 char width
-- Error handling: Zod validation, throw errors, standardized response format
-
-## License
-
-ISC
+```bash
+ssh atk-collective.ch
+```
