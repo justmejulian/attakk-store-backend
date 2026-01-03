@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "short-uuid": "^6.0.3",
     "tsx": "^4.19.4",
     "typescript": "^5.8.2",
     "zod": "^3.24.2"

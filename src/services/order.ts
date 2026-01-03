@@ -32,19 +32,41 @@ export type OrderService = {
   getProductStats: () => ProductStatsResponse;
 };
 
+const isUniqueConstraintError = (error: unknown): boolean => {
+  return (
+    error instanceof Error &&
+    'code' in error &&
+    (error as { code: string }).code === 'SQLITE_CONSTRAINT_UNIQUE'
+  );
+};
+
 export const createOrderService = (repo: OrderRepository): OrderService => {
   const createOrder = (input: CreateOrderInput): CreatedOrderResponse => {
-    const referenceNumber = generateReferenceNumber();
     const lineItemsJson = JSON.stringify(input.line_items);
+    const maxRetries = 100;
 
-    const orderId = repo.insertOrder(referenceNumber, input.email, input.phone, lineItemsJson);
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      const referenceNumber = generateReferenceNumber();
 
-    return {
-      id: orderId,
-      reference_number: referenceNumber,
-      email: input.email,
-      created_at: new Date().toISOString(),
-    };
+      try {
+        const orderId = repo.insertOrder(referenceNumber, input.email, input.phone, lineItemsJson);
+
+        return {
+          id: orderId,
+          reference_number: referenceNumber,
+          email: input.email,
+          line_items: input.line_items,
+          created_at: new Date().toISOString(),
+        };
+      } catch (error) {
+        if (isUniqueConstraintError(error) && attempt < maxRetries - 1) {
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    throw new Error('Failed to generate unique reference number after multiple attempts');
   };
 
   const listOrders = (limit: number, offset: number): ListOrdersResponse => {
