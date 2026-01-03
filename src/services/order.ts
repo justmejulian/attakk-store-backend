@@ -1,6 +1,6 @@
-import type { CreateOrderInput } from '../schemas/order.schema.ts';
-import type { OrderRepository } from '../db/types.ts';
-import { generateReferenceNumber } from '../utils/reference.ts';
+import type { CreateOrderInput } from '../schemas/order.schema';
+import type { OrderRepository } from '../db/types';
+import { generateReferenceNumber } from '../utils/reference';
 
 export type CreatedOrderResponse = {
   id: number;
@@ -11,7 +11,7 @@ export type CreatedOrderResponse = {
 };
 
 export type ListOrdersResponse = {
-  orders: import('../db/types.ts').Order[];
+  orders: import('../db/types').Order[];
   pagination: {
     total: number;
     limit: number;
@@ -20,7 +20,7 @@ export type ListOrdersResponse = {
 };
 
 export type ProductStatsResponse = {
-  products: import('../db/types.ts').ProductStat[];
+  products: import('../db/types').ProductStat[];
   summary: {
     total_orders: number;
     total_items: number;

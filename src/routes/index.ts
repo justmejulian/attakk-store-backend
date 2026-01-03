@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import type { DatabaseSync } from 'node:sqlite';
-import type { OrderService } from '../services/order.ts';
-import { createOrderHandlers } from './orders.ts';
-import { createStatsHandlers } from './stats.ts';
-import { createHealthHandler } from './health.ts';
+import type { OrderService } from '../services/order';
+import { createOrderHandlers } from './orders';
+import { createStatsHandlers } from './stats';
+import { createHealthHandler } from './health';
 
 export const createRoutes = (db: DatabaseSync, service: OrderService): Router => {
   const router = Router();

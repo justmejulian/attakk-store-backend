@@ -1,5 +1,5 @@
-import { createDatabase, initializeDatabase } from './db/index.ts';
-import { createApp, config } from './app.ts';
+import { createDatabase, initializeDatabase } from './db/index';
+import { createApp, config } from './app';
 
 const db = createDatabase();
 await initializeDatabase(db);

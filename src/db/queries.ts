@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import type { OrderRepository, Order, OrderRow, CountRow, LineItem, ProductStat } from './types.ts';
+import type { OrderRepository, Order, OrderRow, CountRow, LineItem, ProductStat } from './types';
 
 export const createOrderRepository = (db: DatabaseSync): OrderRepository => {
   const insertOrder = (

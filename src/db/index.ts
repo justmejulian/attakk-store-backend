@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { config } from '../config.ts';
+import { config } from '../config';
 
 export const createDatabase = (path: string = config.DATABASE_PATH): DatabaseSync => {
   return new DatabaseSync(path);

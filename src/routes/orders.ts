@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { OrderService } from '../services/order.ts';
-import { createOrderSchema, listOrdersSchema } from '../schemas/order.schema.ts';
-import { createError } from '../middleware/error-handler.ts';
+import type { OrderService } from '../services/order';
+import { createOrderSchema, listOrdersSchema } from '../schemas/order.schema';
+import { createError } from '../middleware/error-handler';
 
 export type OrderHandlers = {
   createOrderHandler: (req: Request, res: Response, next: NextFunction) => Promise<void>;

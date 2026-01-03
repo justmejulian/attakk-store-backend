@@ -1,9 +1,9 @@
 import express, { type Express } from 'express';
-import { config } from './config.ts';
-import { createRoutes } from './routes/index.ts';
-import { createOrderRepository } from './db/queries.ts';
-import { createOrderService } from './services/order.ts';
-import { errorHandler } from './middleware/error-handler.ts';
+import { config } from './config';
+import { createRoutes } from './routes/index';
+import { createOrderRepository } from './db/queries';
+import { createOrderService } from './services/order';
+import { errorHandler } from './middleware/error-handler';
 import type { DatabaseSync } from 'node:sqlite';
 
 export const createApp = (db: DatabaseSync): Express => {
