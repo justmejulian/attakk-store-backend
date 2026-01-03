@@ -1,8 +1,9 @@
 export const SCHEMA = `
 CREATE TABLE IF NOT EXISTS orders (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  reference TEXT NOT NULL UNIQUE,
+  reference_number TEXT NOT NULL UNIQUE,
   email TEXT NOT NULL,
+  phone TEXT,
   line_items TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 )

@@ -6,6 +6,7 @@ export type CreatedOrderResponse = {
   id: number;
   reference_number: string;
   email: string;
+  line_items: { price_id: string; quantity: number }[];
   created_at: string;
 };
 
