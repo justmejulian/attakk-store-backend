@@ -60,11 +60,20 @@ On Dokku Host:
 
 ```bash
 dokku apps:create attakk-store-backend
-# No external ports or domains - internal access only via Docker network
-dokku docker-options:add attakk-store-backend deploy "--network dokku"
+
+sudo mkdir -p /var/lib/dokku/data/storage/attakk-store-backend
+sudo chown -R dokku:dokku /var/lib/dokku/data/storage/attakk-store-backend
+dokku storage:mount attakk-store-backend /var/lib/dokku/data/storage/attakk-store-backend:/app/data
+
+# sqlite3 -header -column /var/lib/dokku/data/storage/attakk-store-backend/orders.db "SELECT * FROM orders;"
+
+# Get external URL
+dokku urls attakk-store-backend
 ```
 
 **Internal Access**: The frontend accesses this API via `http://attakk-store-backend.web:3000` on the Docker network.
+
+**Persistent Storage**: The SQLite database is stored in `/app/data/orders.db` inside the container, mounted to `/var/lib/dokku/data/storage/attakk-store-backend` on the host for persistence across deployments.
 
 On Local Machine:
 
